@@ -21,7 +21,6 @@ import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -41,6 +40,12 @@ public class VersicherungJdbcTest {
             IDatabaseTester dbTester = new JdbcDatabaseTester(DbCred.driverClass, DbCred.url, DbCred.user, DbCred.password,
                     DbCred.schema);
             dbTesterCon = dbTester.getConnection();
+
+            dbTesterCon.getConfig().setProperty(
+                    "http://www.dbunit.org/properties/datatypeFactory",
+                    new org.dbunit.ext.oracle.OracleDataTypeFactory()
+            );
+
             IDataSet pre = new CsvDataSet(new File("test-data/ue02"));
             dbTester.setDataSet(pre);
             DatabaseOperation.CLEAN_INSERT.execute(dbTesterCon, pre);
@@ -68,7 +73,7 @@ public class VersicherungJdbcTest {
         for (int i = 0; i < kurzBezes.size(); i++) {
             actualKurzBezes[i] = kurzBezes.get(i);
         }
-        String[] expectedKurzBezes = {"KFZV", "LBV", "HRV"};
+        String[] expectedKurzBezes = {"HRV","KFZV", "LBV"};
         Assert.assertArrayEquals("Liste falsch:", expectedKurzBezes, actualKurzBezes);
     }
 

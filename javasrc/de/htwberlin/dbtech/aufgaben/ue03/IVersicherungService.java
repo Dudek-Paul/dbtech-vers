@@ -42,4 +42,6 @@ public interface IVersicherungService {
      */
     void createDeckung(Integer vertragsId, Integer deckungsartId, BigDecimal deckungsbetrag);
 
+    boolean existiertVertragIDInDB(Integer id);
+
 }

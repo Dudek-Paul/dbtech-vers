@@ -1,9 +1,5 @@
 package de.htwberlin.dbtech.aufgaben.ue03;
 
-/*
-  @author Ingo Classen
- */
-
 import de.htwberlin.dbtech.exceptions.DataException;
 import de.htwberlin.dbtech.exceptions.VertragExistiertNichtException;
 import org.slf4j.Logger;
@@ -11,18 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+
 
 /**
  * VersicherungJdbc
  */
-public class VersicherungService implements IVersicherungService {
-    private static final Logger L = LoggerFactory.getLogger(VersicherungService.class);
+public class VersicherungServiceDao implements IVersicherungService {
+    private static final Logger L = LoggerFactory.getLogger(VersicherungServiceDao.class);
     private Connection connection;
 
     @Override
@@ -53,18 +44,9 @@ public class VersicherungService implements IVersicherungService {
     @Override
     public boolean existiertVertragIDInDB(Integer id) {
         L.info("vid: " + id);
-        String sql = "select ID from Vertrag where ID=?";
-        L.info(sql);
-        try (PreparedStatement ps = useConnection().prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
-            }
-        } catch (SQLException e) {
-            L.error("", e);
-            throw new DataException(e);
-        }
+        return false;
     }
 
 
+}
 }

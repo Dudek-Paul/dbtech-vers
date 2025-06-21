@@ -39,6 +39,8 @@ public class VersicherungServiceJavaTest {
             dbTesterCon = dbTester.getConnection();
             IDataSet datadir = new CsvDataSet(new File("test-data/ue03-04"));
             dbTester.setDataSet(datadir);
+            System.out.println(dbTesterCon.getSchema());
+            System.out.println(Arrays.toString(dbTesterCon.createDataSet().getTableNames()));
             DatabaseOperation.CLEAN_INSERT.execute(dbTesterCon, datadir);
             vService.setConnection(dbTesterCon.getConnection());
         } catch (Exception e) {

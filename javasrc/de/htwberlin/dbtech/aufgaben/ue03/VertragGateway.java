@@ -1,0 +1,43 @@
+package de.htwberlin.dbtech.aufgaben.ue03;
+
+import de.htwberlin.dbtech.exceptions.DataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class VertragGateway {
+    private static final Logger L = LoggerFactory.getLogger(VertragGateway.class);
+    private Connection connection;
+
+    @Override
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    @SuppressWarnings("unused")
+    private Connection useConnection() {
+        if (connection == null) {
+            throw new DataException("Connection not set");
+        }
+        return connection;
+    }
+
+    public Vertrag find(Integer id) {
+        String sql = "select ID from Vertrag where ID=?";
+        L.info(sql);
+        try (
+                PreparedStatement ps = useConnection().prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (
+                SQLException e) {
+            L.error("", e);
+            throw new DataException(e);
+        }
+    }

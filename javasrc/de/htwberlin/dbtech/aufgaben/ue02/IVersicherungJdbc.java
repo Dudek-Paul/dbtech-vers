@@ -64,4 +64,5 @@ public interface IVersicherungJdbc {
      */
     BigDecimal calcMonatsrate(Integer vertragsId);
 
+    BigDecimal calcMonatsrate(int vertragsId);
 }
