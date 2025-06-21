@@ -21,14 +21,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class VersicherungServiceJavaTest {
-    private static final Logger L = LoggerFactory.getLogger(VersicherungServiceJavaTest.class);
+public class VersicherungServiceDaoJavaTest {
+    private static final Logger L = LoggerFactory.getLogger(VersicherungServiceDaoJavaTest.class);
     private static IDatabaseConnection dbTesterCon = null;
 
-    private static final IVersicherungService vService = new VersicherungService();
+    private static final IVersicherungService vService = new VersicherungServiceDao();
 
     @BeforeClass
     public static void setUp() {
@@ -39,8 +38,6 @@ public class VersicherungServiceJavaTest {
             dbTesterCon = dbTester.getConnection();
             IDataSet datadir = new CsvDataSet(new File("test-data/ue03-04"));
             dbTester.setDataSet(datadir);
-            System.out.println(dbTesterCon.getSchema());
-            System.out.println(Arrays.toString(dbTesterCon.createDataSet().getTableNames()));
             DatabaseOperation.CLEAN_INSERT.execute(dbTesterCon, datadir);
             vService.setConnection(dbTesterCon.getConnection());
         } catch (Exception e) {
@@ -198,5 +195,4 @@ public class VersicherungServiceJavaTest {
         }
 
     }
-
 }

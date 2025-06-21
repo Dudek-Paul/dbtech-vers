@@ -1,12 +1,14 @@
 package de.htwberlin.dbtech.aufgaben.ue03;
 
 import de.htwberlin.dbtech.exceptions.DataException;
+import de.htwberlin.dbtech.exceptions.DeckungsartExistiertNichtException;
 import de.htwberlin.dbtech.exceptions.VertragExistiertNichtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.Optional;
 
 
 /**
@@ -21,7 +23,6 @@ public class VersicherungServiceDao implements IVersicherungService {
         this.connection = connection;
     }
 
-    @SuppressWarnings("unused")
     private Connection useConnection() {
         if (connection == null) {
             throw new DataException("Connection not set");
@@ -34,19 +35,20 @@ public class VersicherungServiceDao implements IVersicherungService {
         L.info("vertragsId: " + vertragsId + " deckungsartId: " + deckungsartId + " deckungsbetrag: " + deckungsbetrag);
 
         // Wenn vertragsId kein gültiger Primärschlüssel für Verträge ist.
-        if (!existiertVertragIDInDB(vertragsId)) {
+        Optional<Vertrag> vertrag = new VertragGateway(useConnection()).find(vertragsId);
+        if (vertrag.isEmpty()) {
             throw new VertragExistiertNichtException(vertragsId);
+        }
+
+        // Wenn deckungsartId kein gültiger Primärschlüssel für Deckungsarten ist.
+        Optional<Deckungsart> deckungsart = new DeckungsartGateway(useConnection()).find(deckungsartId);
+        if (deckungsart.isEmpty()) {
+            throw new DeckungsartExistiertNichtException(deckungsartId);
         }
 
         L.info("ende createDeckung");
     }
 
-    @Override
-    public boolean existiertVertragIDInDB(Integer id) {
-        L.info("vid: " + id);
-        return false;
-    }
 
 
-}
 }

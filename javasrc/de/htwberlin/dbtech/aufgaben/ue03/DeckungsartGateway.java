@@ -1,7 +1,6 @@
 package de.htwberlin.dbtech.aufgaben.ue03;
 
 import de.htwberlin.dbtech.exceptions.DataException;
-import org.dbunit.database.DatabaseConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,11 +10,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class VertragGateway {
-    private static final Logger L = LoggerFactory.getLogger(VertragGateway.class);
+public class DeckungsartGateway {
+    private static final Logger L = LoggerFactory.getLogger(DeckungsartGateway.class);
     private final Connection connection;
 
-    public VertragGateway(Connection connection) {
+    public DeckungsartGateway(Connection connection) {
         this.connection = connection;
     }
 
@@ -26,20 +25,19 @@ public class VertragGateway {
         return connection;
     }
 
-    public Optional<Vertrag> find(Integer id) {
-        String sql = "select * from Vertrag where ID=?";
+    public Optional<Deckungsart> find(Integer id) {
+        String sql = "SELECT * FROM deckungsart WHERE deckungsart.id = ?";
         L.info(sql);
         try (PreparedStatement ps = useConnection().prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return Optional.of(
-                            new Vertrag(
+                            new Deckungsart(
                                     rs.getInt("ID"),
                                     rs.getInt("Produkt_FK"),
-                                    rs.getInt("Kunde_FK"),
-                                    rs.getDate("Versicherungsbeginn"),
-                                    rs.getDate("Versicherungsende")
+                                    rs.getString("KurzBez"),
+                                    rs.getString("Bez")
                             )
                     );
                 }
@@ -48,6 +46,7 @@ public class VertragGateway {
             L.error("", e);
             throw new DataException(e);
         }
+
         return Optional.empty();
     }
 }
