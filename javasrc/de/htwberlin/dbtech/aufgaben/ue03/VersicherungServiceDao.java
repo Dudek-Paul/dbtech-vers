@@ -46,6 +46,10 @@ public class VersicherungServiceDao implements IVersicherungService {
             throw new DeckungsartExistiertNichtException(deckungsartId);
         }
 
+        // ...
+
+        // speichern nicht vergessen für den letzten Test
+
         L.info("ende createDeckung");
     }
 

@@ -33,7 +33,7 @@ public class VersicherungService implements IVersicherungService {
 
     @Override
     public void createDeckung(Integer vertragsId, Integer deckungsartId, BigDecimal deckungsbetrag) {
-        L.info("[createDeckung] start -> vertragsId: " + vertragsId + " deckungsartId: " + deckungsartId + " deckungsbetrag: " + deckungsbetrag);
+        L.info("[createDeckung] start - vertragsId: " + vertragsId + " deckungsartId: " + deckungsartId + " deckungsbetrag: " + deckungsbetrag);
 
         // Wenn vertragsId kein gültiger Primärschlüssel für Verträge ist.
         if (!existiertVertragIDInDB(vertragsId)) {
