@@ -4,17 +4,17 @@ import java.sql.Date;
 
 public class Vertrag {
     private Integer id;
-    private Integer produktId;
-    private Integer kundenId;
+    private Integer produktFK;
+    private Integer kundeFK;
     private Date versicherungsbeginn;
     private Date versicherungsende;
 
     public Vertrag() {}
 
-    public Vertrag(Integer id, Integer produktId, Integer kundenId, Date versicherungsbeginn, Date versicherungsende) {
+    public Vertrag(Integer id, Integer produktFK, Integer kundeFK, Date versicherungsbeginn, Date versicherungsende) {
         this.id = id;
-        this.produktId = produktId;
-        this.kundenId = kundenId;
+        this.produktFK = produktFK;
+        this.kundeFK = kundeFK;
         this.versicherungsbeginn = versicherungsbeginn;
         this.versicherungsende = versicherungsende;
     }
@@ -27,20 +27,20 @@ public class Vertrag {
         this.id = id;
     }
 
-    public Integer getProduktId() {
-        return produktId;
+    public Integer getProduktFK() {
+        return produktFK;
     }
 
-    public void setProduktId(Integer produktId) {
-        this.produktId = produktId;
+    public void setProduktFK(Integer produktFK) {
+        this.produktFK = produktFK;
     }
 
-    public Integer getKundenId() {
-        return kundenId;
+    public Integer getKundeFK() {
+        return kundeFK;
     }
 
-    public void setKundenId(Integer kundenId) {
-        this.kundenId = kundenId;
+    public void setKundeFK(Integer kundeFK) {
+        this.kundeFK = kundeFK;
     }
 
     public Date getVersicherungsbeginn() {

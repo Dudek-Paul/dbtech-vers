@@ -33,7 +33,7 @@ public class VersicherungService implements IVersicherungService {
 
     @Override
     public void createDeckung(Integer vertragsId, Integer deckungsartId, BigDecimal deckungsbetrag) {
-        L.info("[createDeckung] start -> vertragsId: " + vertragsId + " deckungsartId: " + deckungsartId + " deckungsbetrag: " + deckungsbetrag);
+        L.info("[VersicherungService.createDeckung] start -> vertragsId: " + vertragsId + " deckungsartId: " + deckungsartId + " deckungsbetrag: " + deckungsbetrag);
 
         // Wenn vertragsId kein gültiger Primärschlüssel für Verträge ist.
         if (!existiertVertragIDInDB(vertragsId)) {
@@ -77,10 +77,10 @@ public class VersicherungService implements IVersicherungService {
 
         speichereDeckung(vertragsId, deckungsartId, deckungsbetrag);
 
-        L.info("[createDeckung] ende");
+        L.info("[VersicherungService.createDeckung] ende");
     }
 
-    public boolean existiertVertragIDInDB(Integer id) {
+    private boolean existiertVertragIDInDB(Integer id) {
         L.info("[existiertVertragIDInDB] id: " + id);
         String sql = "select * from Vertrag where ID=?";
         L.info("[existiertVertragIDInDB] sql: " + sql);
@@ -220,23 +220,23 @@ public class VersicherungService implements IVersicherungService {
                 Date geburtsdatum = rsGeburtsdatum.getDate("Geburtsdatum");
                 Date versicherungsbeginn = rsGeburtsdatum.getDate("Versicherungsbeginn");
                 while (rsAblehnungsregel.next()) {
-                    String ablehnungsregelAlter = rsAblehnungsregel.getString("R_Alter");
+                    String ablehnungsregelAlterString = rsAblehnungsregel.getString("R_Alter");
                     String ablehnungsregelBetragString = rsAblehnungsregel.getString("R_Betrag");
-                    if (ablehnungsregelAlter.contains("<")) {
-                        long differenceInYears = ChronoUnit.YEARS.between(geburtsdatum.toLocalDate(), versicherungsbeginn.toLocalDate());
-                        if (ablehnungsregelBetragString.equals("- -") && differenceInYears < Long.parseLong(ablehnungsregelAlter.split(" ")[1])) {
+                    long differenceInYears = ChronoUnit.YEARS.between(geburtsdatum.toLocalDate(), versicherungsbeginn.toLocalDate());
+                    if (ablehnungsregelAlterString.contains("<")) {
+                        if (ablehnungsregelBetragString.equals("- -") && differenceInYears < Long.parseLong(ablehnungsregelAlterString.split(" ")[1])) {
                             return false;
                         }
-                    } else if (ablehnungsregelAlter.contains(">")) {
-                        long differenceInYears = ChronoUnit.YEARS.between(geburtsdatum.toLocalDate(), versicherungsbeginn.toLocalDate());
+                    } else if (ablehnungsregelAlterString.contains(">")) {
                         if (ablehnungsregelBetragString.equals("- -")) {
-                            if (differenceInYears > Long.parseLong(ablehnungsregelAlter.split(" ")[1])) {
+                            if (differenceInYears > Long.parseLong(ablehnungsregelAlterString.split(" ")[1])) {
                                 return false;
                             }
                         } else {
+                            long ablehnungsregelAlter = Long.parseLong(ablehnungsregelAlterString.split(" ")[1]);
                             BigDecimal ablehnungsregelBetrag = new BigDecimal(ablehnungsregelBetragString.split(" ")[1]);
                             if (deckungsbetrag.compareTo(ablehnungsregelBetrag) >= 0) {
-                                if (differenceInYears > Long.parseLong(ablehnungsregelAlter.split(" ")[1])) {
+                                if (differenceInYears > ablehnungsregelAlter) {
                                     return false;
                                 }
                             }

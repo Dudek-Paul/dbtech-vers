@@ -26,8 +26,9 @@ public class DeckungsartGateway {
     }
 
     public Optional<Deckungsart> find(Integer id) {
-        String sql = "SELECT * FROM deckungsart WHERE deckungsart.id = ?";
-        L.info(sql);
+        L.info("[DeckungsartGateway.find] id: " + id);
+        String sql = "SELECT * FROM deckungsart WHERE ID = ?";
+        L.info("[DeckungsartGateway.find] sql: " + sql);
         try (PreparedStatement ps = useConnection().prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {

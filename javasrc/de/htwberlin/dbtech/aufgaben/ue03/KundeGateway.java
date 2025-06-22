@@ -1,7 +1,6 @@
 package de.htwberlin.dbtech.aufgaben.ue03;
 
 import de.htwberlin.dbtech.exceptions.DataException;
-import org.dbunit.database.DatabaseConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,11 +10,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class VertragGateway {
-    private static final Logger L = LoggerFactory.getLogger(VertragGateway.class);
+public class KundeGateway {
+    private static final Logger L = LoggerFactory.getLogger(KundeGateway.class);
     private final Connection connection;
 
-    public VertragGateway(Connection connection) {
+    public KundeGateway(Connection connection) {
         this.connection = connection;
     }
 
@@ -26,21 +25,19 @@ public class VertragGateway {
         return connection;
     }
 
-    public Optional<Vertrag> find(Integer id) {
-        L.info("[VertragGateway.find] id: " + id);
-        String sql = "select * from Vertrag where ID=?";
-        L.info("[VertragGateway.find] sql: " + sql);
+    public Optional<Kunde> find(Integer id) {
+        L.info("[KundeGateway.find] id: " + id);
+        String sql = "SELECT * FROM kunde WHERE ID = ?";
+        L.info("[KundeGateway.find] sql: " + sql);
         try (PreparedStatement ps = useConnection().prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return Optional.of(
-                            new Vertrag(
+                            new Kunde(
                                     rs.getInt("ID"),
-                                    rs.getInt("Produkt_FK"),
-                                    rs.getInt("Kunde_FK"),
-                                    rs.getDate("Versicherungsbeginn"),
-                                    rs.getDate("Versicherungsende")
+                                    rs.getString("Name"),
+                                    rs.getDate("Geburtsdatum")
                             )
                     );
                 }
@@ -51,4 +48,5 @@ public class VertragGateway {
         }
         return Optional.empty();
     }
+
 }
